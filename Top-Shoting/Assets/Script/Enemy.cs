@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : CollisionObject
 {
@@ -27,7 +28,19 @@ public class Enemy : CollisionObject
         hp -= value;
         if (hp == 0)
         {
-            Destroy(gameObject);
+            var destroyEffectPrefab = Resources.Load("Prefabs/Boom") as GameObject;
+            var destroyEffect = Instantiate(destroyEffectPrefab, transform);
+            GetComponent<BoxCollider2D>().enabled = false;
+            GetComponent<SpriteRenderer>().enabled = false;
+
+            GameScene.Instance.AddScore(10);
+
+            Invoke("Explosion", 0.5f);
         }
+    }
+
+    private void Explosion()
+    {
+        Destroy(gameObject);
     }
 }
